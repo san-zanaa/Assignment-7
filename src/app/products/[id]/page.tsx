@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 interface Market {
     market: string
@@ -29,18 +30,21 @@ interface Product {
 
 const ProductDetails = async ({ params }: {params: Promise<{ id: string }>}) => {
     const { id } = await params;
-    const response = await fetch("https://api.api-store.workers.dev/api/bazardor/products")
+    const response = await fetch("https://api.abcz.workers.dev/api/bazardor/products")
     const data: Product[] = await response.json();
 
     const product = data.find(
         (item) => item.id === Number(id))
     if (!product) {
         return (
-            <div className="p-8">
-                <h1 className="text-xl font-bold">
-                    পণ্য পাওয়া যায়নি
-                </h1>
-            </div>
+            <div className="min-h-[70vh] flex flex-col items-center justify-center text-center">
+            <h1 className="text-7xl font-bold text-green-700">404</h1>
+            <h2 className="text-2xl font-bold mt-4">পৃষ্ঠাটি খুঁজে পাওয়া যায়নি</h2>
+            <Link href="/"
+            className="mt-6 bg-green-700 text-white px-6 py-3 rounded-full font-bold transition-all duration-300 hover:-translate-y-1 hover:bg-[#2d6a4f] cursor-pointer">
+                হোম পেজে ফিরে যান
+            </Link>
+        </div>
         )
     }
     const lowestPrice = Math.min

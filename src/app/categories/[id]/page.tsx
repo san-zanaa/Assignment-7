@@ -25,10 +25,10 @@ interface Category {
 
 const CategoryProducts = async ({params }: { params: Promise<{ id: string }>}) => {
     const { id } = await params
-    const categoryResponse = await fetch(`https://api.api-store.workers.dev/api/bazardor/categories/${id}`)
+    const categoryResponse = await fetch(`https://api.abcz.workers.dev/api/bazardor/categories/${id}`)
     const category: Category = await categoryResponse.json();
 
-    const productsResponse = await fetch('https://api.api-store.workers.dev/api/bazardor/products')
+    const productsResponse = await fetch('https://api.abcz.workers.dev/api/bazardor/products')
     const allProducts: Product[] = await productsResponse.json();
     const products = allProducts.filter(
         (product) => product.category === id)

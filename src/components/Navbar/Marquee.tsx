@@ -15,7 +15,7 @@ interface Headlines {
 const Marquee = async () => {
     const response = await fetch("https://api.api-store.workers.dev/api/bazardor/products")
     const data: Headlines[] = await response.json()
-    console.log(data)
+    
     return (
         <div className="sticky top-0 z-50">
             <div className="flex max-w-7xl mx-auto border-b border-gray-200 overflow-hidden">

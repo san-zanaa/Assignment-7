@@ -1,6 +1,5 @@
 import Hero from "@/components/Hero Section/Hero";
 import Cards from "@/components/Price Cards/Cards";
-import Image from "next/image";
 
 interface Product {
     id: number

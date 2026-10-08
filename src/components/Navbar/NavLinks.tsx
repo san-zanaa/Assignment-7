@@ -1,4 +1,5 @@
 import React from 'react';
+import Marquee from './Marquee';
 
 
 interface Navs {
@@ -13,12 +14,15 @@ const NavLinks = async () => {
     const data:Navs[] = await response.json()
 
     return (
-        <div className='flex gap-5 border border-gray-200 px-30 text-sm mt-5'>
+        <div>
+            <div className='flex gap-5 border border-gray-200 px-30 text-sm mt-5'>
             {data.map((n, i) => (
                 <div className='p-4' key={i} >
                 {n.icon}
                 <span className='font-bold'>{n.nameBn}</span>
                 </div>))}
+            </div>
+            <Marquee />
         </div>
     );
 };

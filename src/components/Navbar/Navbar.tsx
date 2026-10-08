@@ -3,8 +3,7 @@ import Image from 'next/image';
 import NavLinks from './NavLinks';
 
 const Navbar = () => {
-     const date = new Date().toLocaleDateString
-        ("bn-BD", {
+     const date = new Date().toLocaleDateString("bn-BD", {
             dateStyle: "full"
         })
     return (

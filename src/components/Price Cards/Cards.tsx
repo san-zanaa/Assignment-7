@@ -27,7 +27,7 @@ const Cards = ({ product }: {product:Product}) => {
                         : product.unit;
 
     return (
-        <Link href={`catagory/${product.category}`}>
+        <Link href={`/products/${product.id}`}>
         <div className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-green-500 hover:shadow-md cursor-pointer transition-all duration-300 hover:transform hover:-translate-y-1">
             <div className="flex items-center gap-5">
                 <div className="w-12 h-12 bg-[#f3f7f3] rounded-2xl flex items-center justify-center text-4xl">

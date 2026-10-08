@@ -51,7 +51,7 @@ export default async function Home () {
                 </div>
             </section>
 
-            <section className="max-w-7xl mx-auto px-5 mt-10">
+            <section id="cards" className="max-w-7xl mx-auto px-5 mt-10">
 
                 <h1 className="text-2xl font-bold mb-2">
                     সব পণ্য

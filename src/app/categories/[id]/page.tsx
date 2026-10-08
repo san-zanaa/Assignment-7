@@ -17,10 +17,10 @@ interface Product {
 }
 
 interface Category {
-    id: string;
-    slug: string;
-    nameBn: string;
-    icon: string;
+    id: string
+    slug: string
+    nameBn: string
+    icon: string
 }
 
 const CategoryProducts = async ({params }: { params: Promise<{ id: string }>}) => {

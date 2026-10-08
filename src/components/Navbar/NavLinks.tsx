@@ -15,9 +15,9 @@ const NavLinks = async () => {
 
     return (
         <div>
-            <div className='flex gap-5 border border-gray-200 px-30 text-sm mt-5'>
+            <div className='flex md:gap-5 border border-gray-200 px-4 md:px-20 py-2 text-sm mt-5 overflow-x-auto no-scrollbar md:justify-center items-center whitespace-nowrap'>
             {data.map((n, i) => (
-                <div className='p-4' key={i} >
+                <div className='p-4 flex flex-col md:flex-row items-center gap-1 cursor-pointer shrink-0' key={i} >
                 {n.icon}
                 <span className='font-bold'>{n.nameBn}</span>
                 </div>))}

@@ -33,7 +33,7 @@ const CategoryProducts = async ({params }: { params: Promise<{ id: string }>}) =
     const products = allProducts.filter(
         (product) => product.category === id)
 
-
+    
     return (
         <div>
             <div className='p-8'>

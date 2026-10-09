@@ -2,11 +2,20 @@
 import React from "react";
 import Link from "next/link";
 import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
+import { toast } from 'react-toastify'
+import Image from "next/image";
+import { authClient } from "@/lib/auth-client";
 
 function SignUpPage() {
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
+        const formData = new FormData(e.currentTarget)
+        const user = Object.fromEntries(formData.entries()) as {name:string, email:string, password:string}
+
+        const {data, error} = await authClient.signUp.email({
+            ...user,
+            callbackURL: "/"
+        })
         const password = formData.get("password")?.toString() ?? "";
         const confirmPassword =
             formData.get("confirmPassword")?.toString() ?? "";
@@ -14,7 +23,7 @@ function SignUpPage() {
             alert("দুটি পাসওয়ার্ড মিলছে না!");
             return;
         }
-        alert("Signup form submitted successfully!");
+        toast.success("Signup form submitted successfully!");
     };
     return (
         <main className="min-h-screen bg-[#f0f5f0] px-4 py-10 flex items-center justify-center">
@@ -124,7 +133,7 @@ function SignUpPage() {
                             variant="secondary"
                             className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-2 py-2.5 text-sm text-[#26332b] hover:bg-gray-50"
                             onPress={() => alert("Google OAuth setup করতে হবে।")}>
-                            <span className="font-bold text-base text-[#4285F4]">G</span>
+                            <Image src={"/google-logo.png"} alt="github" width={20} height={20}/>
                             Google দিয়ে চালিয়ে যান
                         </Button>
 
@@ -133,7 +142,7 @@ function SignUpPage() {
                             variant="secondary"
                             className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-2 py-2.5 text-sm text-[#26332b] hover:bg-gray-50"
                             onPress={() => alert("GitHub OAuth setup করতে হবে।")}>
-                            <span className="font-bold text-base">●</span>
+                            <Image src={"/github_logo.webp"} alt="github" width={20} height={20}/>
                             GitHub দিয়ে চালিয়ে যান
                         </Button>
                     </div>

@@ -1,0 +1,95 @@
+"use client";
+import { useState } from "react";
+import { Avatar, Button, Input } from "@heroui/react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
+
+const ProfilePage = () => {
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
+    const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const handleUpdate = async () => {
+        if (!name.trim()) {
+            alert("নাম লিখো");
+            return;
+        }
+        setLoading(true);
+        try {
+            const { data, error } = await authClient.updateUser({
+                name: name.trim(),
+            });
+
+            if (error) {
+                toast.error(error.message || "নাম আপডেট হয়নি");
+            } else {
+                toast.success("নাম আপডেট হয়েছে");
+                setName("");
+            }
+        } catch (error) {
+            console.error("Update failed:", error);
+            toast.info("নাম আপডেট করতে সমস্যা হয়েছে");
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleSignOut = async () => {
+        await authClient.signOut();
+        window.location.href = "/";
+    };
+
+    return (
+        <main className="min-h-screen bg-[#F0F5F0] px-5 py-10">
+            <div className="mx-auto max-w-4xl">
+
+                <h1 className="text-2xl font-bold text-gray-800">আমার প্রোফাইল</h1>
+                <p className="mt-1 text-sm text-gray-500">আপনার অ্যাকাউন্টের তথ্য এখানে দেখুন।</p>
+                <div className="mt-6 flex flex-col items-start gap-4 rounded-2xl border border-gray-200 bg-white p-5 sm:flex-row sm:items-center">
+                    <Avatar className="h-16 w-16 rounded-lg">
+                        <Avatar.Image
+                            alt={user?.name || "User"}
+                            src="https://img.heroui.chat/image/avatar?w=400&h=400&u=4"/>
+                        <Avatar.Fallback className="rounded-lg">
+                            {user?.name?.slice(0, 2).toUpperCase() || "JD"}
+                        </Avatar.Fallback>
+                    </Avatar>
+
+                    <div className="min-w-0 flex-1">
+                        <h2 className="text-lg font-semibold text-gray-800">{user?.name || "User"}</h2>
+                        <p className="break-all text-sm text-gray-500">{user?.email}</p>
+                    </div>
+
+                    <Button
+                        variant="bordered"
+                        className="border-red-400 text-red-500"
+                        onPress={handleSignOut}>
+                        ↩ সাইন আউট
+                    </Button>
+                </div>
+
+                <div className="mt-5 rounded-2xl border border-gray-200 bg-white p-6">
+                    <h2 className="font-semibold text-gray-800">তথ্য</h2>
+
+                    <div className="mt-8">
+                        <label className="mb-2 block text-sm text-gray-700">নাম</label>
+                        <Input className="w-full"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder={user?.name || "আপনার নাম লিখুন"}
+                            variant="bordered"
+                            radius="lg" />
+                        <Button
+                            className="mt-4 w-full bg-green-700 font-medium text-white rounded-md"
+                            onPress={handleUpdate}
+                            isLoading={loading}
+                            isDisabled={!name.trim()}>
+                            আপডেট
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
+};
+
+export default ProfilePage;

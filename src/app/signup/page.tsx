@@ -1,30 +1,43 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
+import { Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { toast } from 'react-toastify'
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 function SignUpPage() {
+    const router = useRouter();
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget)
-        const user = Object.fromEntries(formData.entries()) as {name:string, email:string, password:string}
-
-        const {data, error} = await authClient.signUp.email({
-            ...user,
-            callbackURL: "/"
-        })
+        const formData = new FormData(e.currentTarget);
+        const user = Object.fromEntries(
+            formData.entries()) as { name: string; email: string; password: string}
         const password = formData.get("password")?.toString() ?? "";
         const confirmPassword =
             formData.get("confirmPassword")?.toString() ?? "";
+
         if (password !== confirmPassword) {
-            alert("দুটি পাসওয়ার্ড মিলছে না!");
+            toast.error("দুটি পাসওয়ার্ড মিলছে না!");
             return;
         }
-        toast.success("Signup form submitted successfully!");
-    };
+        sessionStorage.setItem("signupEmail", user.email)
+        sessionStorage.setItem("signupPassword", user.password)
+        const { error } = await authClient.signUp.email({
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            callbackURL: "/signin",
+            autoSignIn: false,
+        });
+        if (error) {
+            toast.error(error.message || "Signup failed!")
+            return;
+        }
+        toast.success("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!")
+        router.push("/signin")
+    }
     return (
         <main className="min-h-screen bg-[#f0f5f0] px-4 py-10 flex items-center justify-center">
             <div className="w-full max-w-md">
@@ -51,7 +64,7 @@ function SignUpPage() {
                             </Label>
                             <Input
                                 placeholder="যেমন: রহিম উদ্দিন"
-                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600"/>
+                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600" />
                             <FieldError className="text-xs text-red-600" />
                         </TextField>
 
@@ -73,7 +86,7 @@ function SignUpPage() {
                             </Label>
                             <Input
                                 placeholder="you@example.com"
-                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600"/>
+                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600" />
                             <FieldError className="text-xs text-red-600" />
                         </TextField>
 
@@ -94,7 +107,7 @@ function SignUpPage() {
                             </Label>
                             <Input
                                 placeholder="কমপক্ষে ৮ অক্ষর"
-                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600"/>
+                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600" />
                             <Description className="text-xs text-gray-500">
                                 কমপক্ষে ৮ অক্ষর ব্যবহার করুন।
                             </Description>
@@ -111,7 +124,7 @@ function SignUpPage() {
                             </Label>
                             <Input
                                 placeholder="আবার লিখুন"
-                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600"/>
+                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600" />
                             <FieldError className="text-xs text-red-600" />
                         </TextField>
                         <Button
@@ -133,7 +146,7 @@ function SignUpPage() {
                             variant="secondary"
                             className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-2 py-2.5 text-sm text-[#26332b] hover:bg-gray-50"
                             onPress={() => alert("Google OAuth setup করতে হবে।")}>
-                            <Image src={"/google-logo.png"} alt="github" width={20} height={20}/>
+                            <Image src={"/google-logo.png"} alt="github" width={20} height={20} />
                             Google দিয়ে চালিয়ে যান
                         </Button>
 
@@ -142,7 +155,7 @@ function SignUpPage() {
                             variant="secondary"
                             className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-2 py-2.5 text-sm text-[#26332b] hover:bg-gray-50"
                             onPress={() => alert("GitHub OAuth setup করতে হবে।")}>
-                            <Image src={"/github_logo.webp"} alt="github" width={20} height={20}/>
+                            <Image src={"/github_logo.webp"} alt="github" width={20} height={20} />
                             GitHub দিয়ে চালিয়ে যান
                         </Button>
                     </div>

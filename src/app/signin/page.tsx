@@ -3,18 +3,37 @@
 import { authClient } from "@/lib/auth-client";
 import React from "react";
 import Link from "next/link";
-import { Button, Form, Input, Label, TextField, FieldError} from "@heroui/react";
+import { Button, Form, Input, Label, TextField, FieldError } from "@heroui/react";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function SignInPage() {
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const router = useRouter()
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    useEffect(() => {
+        setEmail(sessionStorage.getItem("signupEmail") || "");
+        setPassword(sessionStorage.getItem("signupPassword") || "");
+    }, []);
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const formData = new FormData(e.currentTarget);
+        const formData = new FormData(e.currentTarget)
         const email = formData.get("email")?.toString() ?? "";
         const password = formData.get("password")?.toString() ?? "";
-
-        alert("Sign in form submitted successfully!");
+        const { error } = await authClient.signIn.email({
+            email,
+            password,
+        })
+        if (error) {
+            toast.error(error.message || "Login failed!")
+            return;
+        }
+        toast.success("সফলভাবে সাইন ইন হয়েছে!")
+        router.push("/")
     };
 
     return (
@@ -45,8 +64,10 @@ function SignInPage() {
                             <Input
                                 name="email"
                                 type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="you@example.com"
-                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600"/>
+                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600" />
                             <FieldError className="text-xs text-red-600" />
                         </TextField>
 
@@ -61,8 +82,10 @@ function SignInPage() {
                             <Input
                                 name="password"
                                 type="password"
-                                placeholder="কমপক্ষে ৮ অক্ষর"
-                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600"/>
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="তোমার পাসওয়ার্ড"
+                                className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-3 py-2.5 text-sm outline-none focus:border-green-600" />
                             <FieldError className="text-xs text-red-600" />
                         </TextField>
 
@@ -85,7 +108,7 @@ function SignInPage() {
                             variant="secondary"
                             className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-2 py-2.5 text-sm text-[#26332b] hover:bg-gray-50"
                             onPress={() => alert("Google OAuth setup করতে হবে।")}>
-                            <Image src={"/google-logo.png"} alt="github" width={20} height={20}/>
+                            <Image src={"/google-logo.png"} alt="github" width={20} height={20} />
                             Google দিয়ে চালিয়ে যান
                         </Button>
 
@@ -94,7 +117,7 @@ function SignInPage() {
                             variant="secondary"
                             className="w-full rounded-lg border border-[#dce6dd] bg-transparent px-2 py-2.5 text-sm text-[#26332b] hover:bg-gray-50"
                             onPress={() => alert("GitHub OAuth setup করতে হবে।")}>
-                            <Image src={"/github_logo.webp"} alt="github" width={20} height={20}/>
+                            <Image src={"/github_logo.webp"} alt="github" width={20} height={20} />
                             GitHub দিয়ে চালিয়ে যান
                         </Button>
                     </div>

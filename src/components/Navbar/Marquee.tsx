@@ -17,7 +17,7 @@ const Marquee = async () => {
     const data: Headlines[] = await response.json()
     
     return (
-        <div className="sticky top-0 z-50">
+        <div className="relative z-0 w-full">
             <div className="flex max-w-7xl mx-auto border-b border-gray-200 overflow-hidden">
                 <MarqueeText className="py-1" direction="right" duration={10}>
                     {data.map((h) => (
